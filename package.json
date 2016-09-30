@@ -160,6 +160,7 @@
     "debug": "2.2.0",
     "eventemitter2": "1.0.5",
     "fclone": "1.0.9",
+    "jsondiffpatch": "^0.2.4",
     "mkdirp": "0.5.1",
     "moment": "^2.14",
     "nssocket": "0.6.0",
