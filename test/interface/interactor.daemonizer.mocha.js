@@ -3,7 +3,7 @@ var should               = require('should');
 var fs                   = require('fs');
 var os                   = require('os');
 var default_conf         = require('../../constants');
-var interactorDaemonizer = require('../../lib/Interactor/InteractorDaemonizer');
+var interactorDaemonizer = require('keymetrics-agent');
 var json5                = require('../../lib/tools/json5.js');
 
 describe('Daemonizer interactor', function() {
