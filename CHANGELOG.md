@@ -1,8 +1,19 @@
-## 2.6
+## 3.0.0
 
 - #2144 #1060 #2957 #2033 #1872 #2938 #971 Select application uid/gid via --uid --gid (CLI+JSON) + display user via pm2 ls
-- #2290 allow to declare apps under "pm2" attribute (eq "apps"). Nicer in package.json
 - pm2 install module-name --uid <uid> --gid <gid> possible
+
+## 2.6.0
+
+### Changes
+
+|!| need to be documented when released
+
+- #2998 pm2 report command for automated system inspection
+- #2997 --disable-logs option to suppress error
+- #2290 allow to declare apps under "pm2" attribute (eq "apps"). Nicer in package.json
+- #2994 allow to specify typescript version to be installed
+- #2501 low memory environment pm2 setting via PM2_OPTIMIZE_MEMORY (beta)
 - #2968 pm2 attach <pm_id> to attach to process stdin / stdout
 - pm2-runtime -> drop in replacement for the node.js binary
 - #2951 pm2 reload command locker via timestamped lock file
@@ -20,10 +31,11 @@
 - refactor the context retrieving from error
 - add a TTL for file cache entry
 - #2956 Fix listen_timeout in combination with wait_ready
+- #2996 respect signal order on pm2 reload (delegate ready function to reload fn)
 
 ### Breaking
 
-- Drop pm2-daemon CLI
+- Drop pm2-daemon CLI (replaced by pm2-runtime)
 
 ## 2.5
 
