@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2013 the PM2 project authors. All rights reserved.
  * Use of this source code is governed by a license that
@@ -45,7 +44,7 @@ module.exports = function(PM2_HOME) {
 
     DEFAULT_PID_PATH         : p.resolve(PM2_HOME, 'pids'),
     DEFAULT_LOG_PATH         : p.resolve(PM2_HOME, 'logs'),
-    DEFAULT_MODULE_PATH      : p.resolve(PM2_HOME, 'node_modules'),
+    DEFAULT_MODULE_PATH      : p.resolve(PM2_HOME, 'modules'),
     KM_ACCESS_TOKEN          : p.resolve(PM2_HOME, 'km-access-token'),
     DUMP_FILE_PATH           : p.resolve(PM2_HOME, 'dump.pm2'),
     DUMP_BACKUP_FILE_PATH    : p.resolve(PM2_HOME, 'dump.pm2.bak'),

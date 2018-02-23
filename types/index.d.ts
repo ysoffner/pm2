@@ -114,7 +114,7 @@ export function killDaemon(errback: ErrProcDescCallback): void;
  * a process id, or the string “all” to indicate that all scripts should be restarted.
  * @param errback
  */
-export function describe(process: string|number, errback: ErrProcDescCallback): void;
+export function describe(process: string|number, errback: ErrProcDescsCallback): void;
 
 /**
  * Gets the list of running processes being managed by pm2.
@@ -169,6 +169,14 @@ export function sendSignalToProcessName(signal:string|number, process: number|st
  * @param errback
  */
 export function startup(platform: Platform, errback: ErrResultCallback): void;
+
+/**
+ * - Send an set of data as object to a specific process
+ * @param proc_id
+ * @param packet
+ * @param cb
+ */
+export function sendDataToProcessId(proc_id: number, packet: object, cb: ErrResultCallback): void;
 
 // Interfaces
 
@@ -375,7 +383,7 @@ export interface StartOptions {
   /**
    * If set to true, the application will be restarted on change of the script file.
    */
-  watch?: boolean;
+  watch?: boolean|string[];
   /**
    * (Default: false) By default, pm2 will only start a script if that script isn’t
    * already running (a script is a path to an application, not the name of an application
@@ -387,6 +395,10 @@ export interface StartOptions {
   write?: any;
   sourceMapSupport?: any;
   disableSourceMapSupport?: any;
+  /**
+   * The environment variables to pass on to the process.
+   */
+  env?: { [key: string]: string; };
 }
 
 // Types

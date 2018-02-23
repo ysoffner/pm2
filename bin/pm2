@@ -1,6 +1,10 @@
 #!/usr/bin/env node
-
 'use strict';
+
+var semver = require('semver');
+
+if (semver.satisfies(process.versions.node, '>= 5.7.0'))
+  require('v8-compile-cache');
 
 process.env.PM2_USAGE = 'CLI';
 
@@ -14,6 +18,17 @@ var debug     = require('debug')('pm2:cli');
 var PM2       = require('../lib/API.js');
 var pkg       = require('../package.json');
 var tabtab    = require('../lib/completion.js');
+
+// Early detection of silent to avoid printing motd
+if (process.argv.indexOf('--silent') > -1 ||
+    process.argv.indexOf('-s') > -1) {
+  process.env.PM2_DISCRETE_MODE = true;
+}
+
+if (process.argv.indexOf('-v') > -1) {
+  console.log(pkg.version);
+  process.exit(0);
+}
 
 var pm2 = new PM2();
 
@@ -43,6 +58,7 @@ commander.version(pkg.version)
   .option('--gid <gid>', 'run target script with <gid> rights')
   .option('--cwd <path>', 'run target script as <username>')
   .option('--hp <home path>', 'define home path when generating startup script')
+  .option('--wait-ip', 'override systemd script to wait for full internet connectivity to launch pm2')
   .option('--service-name <name>', 'define service name when generating startup script')
   .option('-c --cron <cron_pattern>', 'restart a running process based on a cron pattern')
   .option('-w --write', 'write configuration in local folder')
@@ -68,6 +84,10 @@ commander.version(pkg.version)
   .option('--trace', 'enable transaction tracing with km')
   .option('--disable-trace', 'disable transaction tracing with km')
   .option('--attach', 'attach logging after your start/restart/stop/reload')
+  .option('--sort <field_name:sort>', 'sort process according to field\'s name')
+  .option('--v8', 'enable v8 data collecting')
+  .option('--event-loop-inspector', 'enable event-loop-inspector dump in pmx')
+  .option('--deep-monitoring', 'enable all monitoring tools (equivalent to --v8 --event-loop-inspector --trace)')
   .usage('[cmd] app');
 
 commander.on('--help', function() {
@@ -292,6 +312,12 @@ commander.command('startOrReload <json>')
     pm2._startJson(file, commander, 'reloadProcessId');
   });
 
+commander.command('pid [app_name]')
+  .description('return pid of [app_name] or all')
+  .action(function(app) {
+    pm2.getPID(app);
+  });
+
 commander.command('startOrGracefulReload <json>')
   .description('start or gracefully reload JSON file')
   .action(function(file) {
@@ -438,10 +464,16 @@ commander.command('update')
 /**
  * Module specifics
  */
-commander.command('install <module|git:// url>')
+commander.command('install [module|git:// url|json]')
   .alias('module:install')
-  .description('install or update a module and run it forever')
-  .action(function(plugin_name) {
+  .option('--v1', 'install module in v1 manner (do not use it)')
+  .option('--safe [time]', 'keep module backup, if new module fail = restore with previous')
+  .description('install or update a module (or a set of modules) and run it forever')
+  .action(function(plugin_name, opts) {
+    if (opts.v1)
+      commander.v1 = true;
+    if (opts.safe)
+      commander.safe = opts.safe;
     pm2.install(plugin_name, commander);
   });
 
@@ -641,7 +673,7 @@ commander.command('logrotate')
 //
 
 commander.command('ecosystem [mode]')
-  .alias('generate')
+  .alias('init')
   .description('generate a process conf file. (mode = null or simple)')
   .action(function(mode) {
     pm2.generateSample(mode);
@@ -684,12 +716,17 @@ commander
   .command('list')
   .alias('ls')
   .description('list all processes')
-  .option('--watch', 'constant refresh of process listing')
   .action(function() {
     pm2.list(commander)
   });
 
 commander.command('l')
+  .description('(alias) list all processes')
+  .action(function() {
+    pm2.list()
+  });
+
+commander.command('ps')
   .description('(alias) list all processes')
   .action(function() {
     pm2.list()

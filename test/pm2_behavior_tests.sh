@@ -23,6 +23,8 @@ bash ./test/bash/pm2-dev.sh
 spec "pm2-dev"
 bash ./test/bash/pm2-runtime.sh
 spec "pm2-runtime"
+bash ./test/bash/options-via-env.sh
+spec "set option via environment"
 bash ./test/bash/startup.sh
 spec "upstart startup test"
 bash ./test/bash/dump.sh
@@ -105,6 +107,8 @@ bash ./test/bash/log-entire.sh
 spec "merge stdout && stderr"
 bash ./test/bash/module.sh
 spec "module system"
+bash ./test/bash/module-safeguard.sh
+spec "module safeguard system (--safe)"
 bash ./test/bash/vizion.sh
 spec "vizion features (versioning control)"
 bash ./test/bash/wrapped-fork.sh
